@@ -19,6 +19,7 @@ using IO.Swagger.Attributes;
 using IO.Swagger.Security;
 using Microsoft.AspNetCore.Authorization;
 using IO.Swagger.Models;
+using IO.Swagger.DBModels;
 
 namespace IO.Swagger.Controllers
 { 
@@ -28,9 +29,9 @@ namespace IO.Swagger.Controllers
     [ApiController]
     public class PetApiController : ControllerBase
     { 
-         private readonly PetStoreContext _context;
+         private readonly PetstoreDBContext _context;
 
-        public PetApiController(PetStoreContext context)
+        public PetApiController(PetstoreDBContext context)
         {
 
             _context = context;
@@ -47,12 +48,11 @@ namespace IO.Swagger.Controllers
         [Route("/v2/pet")]
         [ValidateModelState]
         [SwaggerOperation("AddPet")]
-        public virtual IActionResult AddPet([FromBody]Pet body)
+        public virtual IActionResult AddPet([FromBody] DBModels.Pet body)
         { 
             _context.Pets.Add(body);
 
             _context.SaveChanges();
-
 
             //TODO: Uncomment the next line to return response 405 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
             // return StatusCode(405);
@@ -97,7 +97,7 @@ namespace IO.Swagger.Controllers
         [Route("/v2/pet/findByStatus")]
         [ValidateModelState]
         [SwaggerOperation("FindPetsByStatus")]
-        [SwaggerResponse(statusCode: 200, type: typeof(List<Pet>), description: "successful operation")]
+        [SwaggerResponse(statusCode: 200, type: typeof(List<Models.Pet>), description: "successful operation")]
         public virtual IActionResult FindPetsByStatus([FromQuery][Required()]List<string> status)
         { 
             //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
@@ -111,8 +111,8 @@ namespace IO.Swagger.Controllers
             exampleJson = "[ {\n  \"photoUrls\" : [ \"photoUrls\", \"photoUrls\" ],\n  \"name\" : \"doggie\",\n  \"id\" : 0,\n  \"category\" : {\n    \"name\" : \"name\",\n    \"id\" : 6\n  },\n  \"tags\" : [ {\n    \"name\" : \"name\",\n    \"id\" : 1\n  }, {\n    \"name\" : \"name\",\n    \"id\" : 1\n  } ],\n  \"status\" : \"available\"\n}, {\n  \"photoUrls\" : [ \"photoUrls\", \"photoUrls\" ],\n  \"name\" : \"doggie\",\n  \"id\" : 0,\n  \"category\" : {\n    \"name\" : \"name\",\n    \"id\" : 6\n  },\n  \"tags\" : [ {\n    \"name\" : \"name\",\n    \"id\" : 1\n  }, {\n    \"name\" : \"name\",\n    \"id\" : 1\n  } ],\n  \"status\" : \"available\"\n} ]";
             
             var example = exampleJson != null
-            ? JsonConvert.DeserializeObject<List<Pet>>(exampleJson)
-            : default(List<Pet>);
+            ? JsonConvert.DeserializeObject<List<Models.Pet>>(exampleJson)
+            : default(List<Models.Pet>);
             //TODO: Change the data returned
             return new ObjectResult(example);
         }
@@ -128,7 +128,7 @@ namespace IO.Swagger.Controllers
         [Route("/v2/pet/findByTags")]
         [ValidateModelState]
         [SwaggerOperation("FindPetsByTags")]
-        [SwaggerResponse(statusCode: 200, type: typeof(List<Pet>), description: "successful operation")]
+        [SwaggerResponse(statusCode: 200, type: typeof(List<Models.Pet>), description: "successful operation")]
         public virtual IActionResult FindPetsByTags([FromQuery][Required()]List<string> tags)
         { 
             //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
@@ -142,8 +142,8 @@ namespace IO.Swagger.Controllers
             exampleJson = "[ {\n  \"photoUrls\" : [ \"photoUrls\", \"photoUrls\" ],\n  \"name\" : \"doggie\",\n  \"id\" : 0,\n  \"category\" : {\n    \"name\" : \"name\",\n    \"id\" : 6\n  },\n  \"tags\" : [ {\n    \"name\" : \"name\",\n    \"id\" : 1\n  }, {\n    \"name\" : \"name\",\n    \"id\" : 1\n  } ],\n  \"status\" : \"available\"\n}, {\n  \"photoUrls\" : [ \"photoUrls\", \"photoUrls\" ],\n  \"name\" : \"doggie\",\n  \"id\" : 0,\n  \"category\" : {\n    \"name\" : \"name\",\n    \"id\" : 6\n  },\n  \"tags\" : [ {\n    \"name\" : \"name\",\n    \"id\" : 1\n  }, {\n    \"name\" : \"name\",\n    \"id\" : 1\n  } ],\n  \"status\" : \"available\"\n} ]";
             
             var example = exampleJson != null
-            ? JsonConvert.DeserializeObject<List<Pet>>(exampleJson)
-            : default(List<Pet>);
+            ? JsonConvert.DeserializeObject<List<Models.Pet>>(exampleJson)
+            : default(List<Models.Pet>);
             //TODO: Change the data returned
             return new ObjectResult(example);
         }
@@ -161,8 +161,8 @@ namespace IO.Swagger.Controllers
        //[Authorize(AuthenticationSchemes = ApiKeyAuthenticationHandler.SchemeName)]
         [ValidateModelState]
         [SwaggerOperation("GetPetById")]
-        [SwaggerResponse(statusCode: 200, type: typeof(Pet), description: "successful operation")]
-        public virtual ActionResult<Pet> GetPetById([FromRoute][Required]long? petId)
+        [SwaggerResponse(statusCode: 200, type: typeof(Models.Pet), description: "successful operation")]
+        public virtual ActionResult<DBModels.Pet> GetPetById([FromRoute][Required]long? petId)
         { 
             //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
             // return StatusCode(200, default(Pet));
@@ -207,7 +207,7 @@ namespace IO.Swagger.Controllers
         [Route("/v2/pet")]
         [ValidateModelState]
         [SwaggerOperation("UpdatePet")]
-        public virtual IActionResult UpdatePet([FromBody]Pet body)
+        public virtual IActionResult UpdatePet([FromBody]Models.Pet body)
         { 
             //TODO: Uncomment the next line to return response 400 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
             // return StatusCode(400);

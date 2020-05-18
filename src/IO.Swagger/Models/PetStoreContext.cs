@@ -9,6 +9,6 @@ namespace IO.Swagger.Models
         {
         }
 
-        public DbSet<Pet> Pets { get; set; }
+        public DbSet<Pet> Pet { get; set; }
     }
 }

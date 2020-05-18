@@ -31,6 +31,7 @@ namespace IO.Swagger.Models
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id")]
+        
         public long? Id { get; set; }
 
         /// <summary>

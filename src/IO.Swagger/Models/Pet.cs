@@ -27,6 +27,17 @@ namespace IO.Swagger.Models
     [DataContract]
     public partial class Pet : IEquatable<Pet>
     { 
+
+        public Pet(DBModels.Pet dbPet) {
+            this.Id = dbPet.Id;
+            this.Name = dbPet.Name;
+            this.Status = (StatusEnum?)Enum.Parse(typeof(StatusEnum), dbPet.Status);            
+            //TODO: CONVERT LATER.
+            // foreach(DBModels.PetTagMapping mapping in dbPet.PetTagMapping) {
+            //   this.Tags.Add(mapping.Tag);      
+            // }
+        }
+        
         /// <summary>
         /// Gets or Sets Id
         /// </summary>

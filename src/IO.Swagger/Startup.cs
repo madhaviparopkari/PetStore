@@ -24,6 +24,7 @@ using IO.Swagger.Filters;
 using IO.Swagger.Security;
 using Microsoft.EntityFrameworkCore;
 using IO.Swagger.Models;
+using IO.Swagger.DBModels;
 
 namespace IO.Swagger
 {
@@ -97,8 +98,12 @@ namespace IO.Swagger
                     c.OperationFilter<GeneratePathParamsValidationFilter>();
                 });
 
-                services.AddDbContext<PetStoreContext>(opt =>
-                opt.UseInMemoryDatabase("PetStoreDB"));
+            //var connectionString = @"Server=tcp:home-sqlserver.database.windows.net,1433;Initial Catalog=PetstoreDB;Persist Security Info=False;User ID=home-admin;Password=Covid19!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30";    
+            //services.AddDbContext<PetStoreContext>(options => options.UseSqlServer(connectionString));
+                //services.AddDbContext<PetStoreContext>(opt =>
+                //opt.UseInMemoryDatabase("PetStoreDB"));
+
+            services.AddDbContext<PetstoreDBContext>();    
         }
 
         /// <summary>
