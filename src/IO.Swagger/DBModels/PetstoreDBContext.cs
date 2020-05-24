@@ -19,7 +19,7 @@ namespace IO.Swagger.DBModels
         public virtual DbSet<Customer> Customer { get; set; }
         public virtual DbSet<Invoice> Invoice { get; set; }
         public virtual DbSet<InvoiceStatus> InvoiceStatus { get; set; }
-        public virtual DbSet<Pet> Pets { get; set; }
+        public virtual DbSet<Pet> Pet { get; set; }
         public virtual DbSet<PetTagMapping> PetTagMapping { get; set; }
         public virtual DbSet<Tag> Tag { get; set; }
 

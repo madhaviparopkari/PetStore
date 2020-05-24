@@ -20,6 +20,8 @@ using IO.Swagger.Security;
 using Microsoft.AspNetCore.Authorization;
 using IO.Swagger.Models;
 using IO.Swagger.DBModels;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 
 namespace IO.Swagger.Controllers
 { 
@@ -42,24 +44,44 @@ namespace IO.Swagger.Controllers
         /// Add a new pet to the store
         /// </summary>
         
-        /// <param name="body">Pet object that needs to be added to the store</param>
+        /// <param name="pet">Pet object that needs to be added to the store</param>
         /// <response code="405">Invalid input</response>
         [HttpPost]
         [Route("/v2/pet")]
         [ValidateModelState]
         [SwaggerOperation("AddPet")]
-        public virtual IActionResult AddPet([FromBody] DBModels.Pet body)
-        { 
-            _context.Pets.Add(body);
+        public virtual IActionResult AddPet([FromBody] DBModels.Pet pet)
+        {
+            try
+            { 
+                pet.Validate();
+                _context.Pet.Add(pet);
 
-            _context.SaveChanges();
+                _context.SaveChanges();
+                Console.WriteLine("Received request for new pet. Thank you!!!");
+                return StatusCode(201);
 
-            //TODO: Uncomment the next line to return response 405 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(405);
 
-            Console.WriteLine("Received request for new pet. Thank you!!!");
-            return StatusCode(201);
-            //throw new NotImplementedException();
+            }
+            catch(ArgumentException ex)
+            {
+                return StatusCode(400, ex.Message);
+            }
+            catch(DbUpdateException ex)
+            {
+                if(ex.InnerException.GetType() == typeof(SqlException)
+                    && ((SqlException)(ex.InnerException)).Number == 2627)
+                {
+                    ApiResponse response = new ApiResponse();
+                    response.Code = 409; 
+                    response.Type = "Duplicate";
+                    response.Message = "Pet with the same id already exist."; 
+                
+                    return StatusCode((int)response.Code, response);
+                }
+               
+               return StatusCode(500);
+            }
         }
 
         /// <summary>
@@ -185,7 +207,7 @@ namespace IO.Swagger.Controllers
             //TODO: Change the data returned
             return new ObjectResult(example);*/
 
-            var item = _context.Pets.Find(petId);
+            var item = _context.Pet.Find(petId);
 
             if(item == null) 
             {  
