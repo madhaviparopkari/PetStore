@@ -42,7 +42,7 @@ namespace IO.Swagger.DBModels
 
                 entity.Property(e => e.Id)
                     .HasColumnName("id")
-                    .ValueGeneratedNever();
+                    .ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Name)
                     .HasColumnName("name")
@@ -69,7 +69,7 @@ namespace IO.Swagger.DBModels
 
                 entity.Property(e => e.Id)
                     .HasColumnName("id")
-                    .ValueGeneratedNever();
+                    .ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Email)
                     .IsRequired()
@@ -106,7 +106,7 @@ namespace IO.Swagger.DBModels
             {
                 entity.Property(e => e.Id)
                     .HasColumnName("id")
-                    .ValueGeneratedNever();
+                    .ValueGeneratedOnAdd();
 
                 entity.Property(e => e.CustomerId).HasColumnName("customer_id");
 
@@ -152,7 +152,7 @@ namespace IO.Swagger.DBModels
 
                 entity.Property(e => e.Id)
                     .HasColumnName("id")
-                    .ValueGeneratedNever();
+                    .ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Name)
                     .IsRequired()
@@ -164,7 +164,7 @@ namespace IO.Swagger.DBModels
             {
                 entity.Property(e => e.Id)
                     .HasColumnName("id")
-                    .ValueGeneratedNever();
+                    .ValueGeneratedOnAdd();
 
                 entity.Property(e => e.CategoryId).HasColumnName("category_id");
 
@@ -195,7 +195,7 @@ namespace IO.Swagger.DBModels
 
                 entity.Property(e => e.Id)
                     .HasColumnName("id")
-                    .ValueGeneratedNever();
+                    .ValueGeneratedOnAdd();
 
                 entity.Property(e => e.PetId).HasColumnName("pet_id");
 
@@ -222,7 +222,7 @@ namespace IO.Swagger.DBModels
 
                 entity.Property(e => e.Id)
                     .HasColumnName("id")
-                    .ValueGeneratedNever();
+                    .ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Name)
                     .HasColumnName("name")

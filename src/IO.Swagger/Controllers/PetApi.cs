@@ -18,10 +18,11 @@ using System.ComponentModel.DataAnnotations;
 using IO.Swagger.Attributes;
 using IO.Swagger.Security;
 using Microsoft.AspNetCore.Authorization;
-using IO.Swagger.Models;
 using IO.Swagger.DBModels;
+using IO.Swagger.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using IO.Swagger.DAL;
 
 namespace IO.Swagger.Controllers
 { 
@@ -31,13 +32,14 @@ namespace IO.Swagger.Controllers
     [ApiController]
     public class PetApiController : ControllerBase
     { 
-         private readonly PetstoreDBContext _context;
+         DAL.PetDal _petDal;
+         DAL.CategoryDal _categoryDal;
 
-        public PetApiController(PetstoreDBContext context)
+        public PetApiController(PetstoreDBContext _context)
         {
 
-            _context = context;
-
+             _petDal = new PetDal(_context);
+             _categoryDal = new CategoryDal(_context);
         }
 
         /// <summary>
@@ -50,16 +52,37 @@ namespace IO.Swagger.Controllers
         [Route("/v2/pet")]
         [ValidateModelState]
         [SwaggerOperation("AddPet")]
-        public virtual IActionResult AddPet([FromBody] DBModels.Pet pet)
+        public virtual ActionResult<PetCreateResponsetDto> AddPet([FromBody] PetCreateRequestDto pet)
         {
             try
             { 
                 pet.Validate();
-                _context.Pet.Add(pet);
+              
+                //Convert DTO object to DAO
+                DBModels.Pet petDao = new DBModels.Pet();
+                petDao.Name = pet.Name;
+             
+                //Create CategoryDal to get CategoryID from name 
+                DBModels.Category c = _categoryDal.getCategoryByName(pet.CategoryName);
+                if(c == null)
+                {
+                   throw new ArgumentException("Can not find teh category by this name.");
+                }
+                petDao.CategoryId = c.Id;  
+                petDao.Status = PetStatus.AvailableEnum.ToString();
+                _petDal.savePet(petDao);
+               
 
-                _context.SaveChanges();
+                //Convert response DAO to DTO
+                PetCreateResponsetDto result = new PetCreateResponsetDto();
+                result.Id = petDao.Id;
+                result.Name = pet.Name;
+                result.CategoryName = pet.CategoryName;
+                result.Tags = pet.Tags;
+                result.Status = (Models.Pet.StatusEnum?)PetStatus.AvailableEnum;
+
                 Console.WriteLine("Received request for new pet. Thank you!!!");
-                return StatusCode(201);
+                return StatusCode(201, result);
 
 
             }
@@ -184,7 +207,7 @@ namespace IO.Swagger.Controllers
         [ValidateModelState]
         [SwaggerOperation("GetPetById")]
         [SwaggerResponse(statusCode: 200, type: typeof(Models.Pet), description: "successful operation")]
-        public virtual ActionResult<DBModels.Pet> GetPetById([FromRoute][Required]long? petId)
+        public virtual ActionResult<DBModels.Pet> GetPetById([FromRoute][Required]int? petId)
         { 
             //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
             // return StatusCode(200, default(Pet));
@@ -207,7 +230,7 @@ namespace IO.Swagger.Controllers
             //TODO: Change the data returned
             return new ObjectResult(example);*/
 
-            var item = _context.Pet.Find(petId);
+            var item = _petDal.getPetById((int)petId);
 
             if(item == null) 
             {  
