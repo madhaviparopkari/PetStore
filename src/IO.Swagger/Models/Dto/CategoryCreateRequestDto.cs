@@ -120,9 +120,8 @@ namespace IO.Swagger.Models
            
             if(string.IsNullOrEmpty(this.Name))
             {
-                throw new ArgumentException("Category name can not be null or empty.");
+                throw new ArgumentException("Name can not be null or empty.");
             }
-           
         } 
 
         #pragma warning restore 1591
